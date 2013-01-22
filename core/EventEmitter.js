@@ -65,7 +65,7 @@
         self.off(event, one);
       }
 
-      this.on(event, one);
+      this.on(event, one, thisp);
 
       return this;
     },
