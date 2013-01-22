@@ -27,7 +27,7 @@
         listeners.push([listener, thisp]);
       }
 
-      return listener;
+      return this;
     },
 
     off: function(event, listener) {
@@ -59,24 +59,15 @@
     },
 
     once: function(event, listener, thisp){
-      var self = this,
-        listeners = this.listeners(event),
-        wrapper;
-
-      if (indexOf(listeners, listener) < 0) {
-        wrapper = function() {
-          if (arguments.length)
-            listener.apply(thisp, arguments);
-          else
-            listener.call(thisp);
-
-          self.off(event, wrapper);
-        };
-
-        listeners.push([wrapper, thisp]);
+      var self = this;
+      function one() {
+        listener.apply(this, arguments);
+        self.off(event, one);
       }
 
-      return wrapper || listener;
+      this.on(event, one);
+
+      return this;
     },
 
     listeners: function(event) {
