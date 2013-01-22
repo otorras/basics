@@ -70,6 +70,19 @@
       return this;
     },
 
+    when: function(event, listener, thisp) {
+      var self = this;
+      function check() {
+        if (listener.apply(this, arguments)) {
+          self.off(event, check);
+        }
+      }
+
+      this.on(event, check, thisp);
+
+      return this;
+    },
+
     listeners: function(event) {
       var events = this._events || (this._events = {});
 
