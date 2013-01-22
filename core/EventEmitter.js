@@ -2,10 +2,12 @@
   'use strict';
 
   function indexOf(listeners, listener) {
-    var idx = listeners.length;
+    var idx = listeners.length,
+        value;
 
     while (idx--) {
-      if (listeners[idx][0] === listener) {
+      value = listeners[idx][0];
+      if (value === listener || (value.listener && value.listener === listener)) {
         return idx;
       }
     }
@@ -65,6 +67,7 @@
         self.off(event, one);
       }
 
+      one.listener = listener;
       this.on(event, one, thisp);
 
       return this;
@@ -78,6 +81,7 @@
         }
       }
 
+      check.listener = listener;
       this.on(event, check, thisp);
 
       return this;
