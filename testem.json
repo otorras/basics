@@ -1,0 +1,9 @@
+{
+	"framework": "mocha",
+	"src_files": [
+		"vendor/expect.js",
+		"vendor/sinon.js",
+		"core/*.js",
+		"test/*.spec.js"
+	]
+}

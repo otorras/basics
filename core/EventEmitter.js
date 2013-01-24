@@ -39,6 +39,8 @@
       if (listenerIndex >= 0) {
         listeners.splice(listenerIndex, 1);
       }
+
+      return this;
     },
 
     emit: function(event/*, args*/) {
