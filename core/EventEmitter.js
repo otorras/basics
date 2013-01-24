@@ -97,7 +97,7 @@
   };
 
   EventEmitter.mixin = function(target) {
-    var props = ['on', 'off', 'emit', 'once', 'listeners'];
+    var props = ['on', 'off', 'emit', 'once', 'when', 'listeners'];
 
     for (var i = props.length; i--; )
       target[props[i]] = EventEmitter.prototype[props[i]];
