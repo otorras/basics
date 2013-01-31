@@ -37,17 +37,16 @@ describe('EventEmitter', function() {
 
   describe('when an event is emitted', function () {
     it('should call the listeners once', function () {
-      var listeners = [sinon.spy(), sinon.spy()];
+      var spy1 = sinon.spy(), spy2 = sinon.spy();
 
-      listeners.forEach(function(spy) {
-        ee.on(evt, spy);
-      });
+
+      ee.on(evt, spy1);
+      ee.on(evt, spy2);
 
       ee.emit(evt);
 
-      listeners.forEach(function(spy) {
-        expect(spy.calledOnce);
-      });
+      expect(spy1.calledOnce);
+      expect(spy2.calledOnce);
     });
 
     it("should call the listeners in order", function() {
