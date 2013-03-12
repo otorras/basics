@@ -44,7 +44,7 @@
     },
 
     emit: function(event/*, args*/) {
-      var listeners = this.listeners(event),
+      var listeners = this.listeners(event).slice(),
         singleArg = arguments.length === 1,
         slice     = Array.prototype.slice,
         idx       = 0,
