@@ -1,7 +1,5 @@
-# jsbase
+## Basics: JavaScript basic core components to build maintanable applications
 
-## Core
-
-#### EventEmitter
-
-#### Promise (TODO)
+* Event emitter
+* Promise [TODO]
+* Class definition and inheritance [TODO]
