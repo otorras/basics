@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Basics Spec Runner</title>
+    <link rel="stylesheet" type="text/css" href="../node_modules/mocha/mocha.css" />
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <!-- TEST LIBRARIES INCLUDES -->
+    <script src="../node_modules/expect.js/expect.js"></script>
+    <script src="../node_modules/sinon/pkg/sinon.js"></script>
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script>
+      if (location.hash === '#testem')
+        document.write('<script src="/testem.js"></'+'script>')
+    </script>
+    <!-- ... -->
+
+    <!-- MOCHA CONFIG -->
+    <script>mocha.setup({ ui: "bdd" });</script>
+    <!-- ... -->
+
+    <!-- SUT -->
+    <script src="../core/EventEmitter.js"></script>
+    <!-- ... -->
+
+    <!-- TESTS -->
+    <script src="EventEmitter.spec.js"></script>
+    <!-- ... -->
+
+    <!-- EXECUTE -->
+    <script>mocha.run();</script>
+    <!-- ... -->
+  </body>
+</html>
