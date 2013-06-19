@@ -9,12 +9,17 @@
     "url": "git://github.com/otorras/basics.git"
   },
   "bugs": {
-      "url": "http://github.com/otorras/basics/issues"
+    "url": "http://github.com/otorras/basics/issues"
   },
   "directories": {
     "test": "test"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "mocha": "~1.11.0",
+    "sinon": "~1.7.2",
+    "expect.js": "~0.2.0"
   }
 }
