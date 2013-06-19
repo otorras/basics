@@ -1,0 +1,21 @@
+{
+  "name": "basics",
+  "version": "0.1.0",
+  "description": "JavaScript basic core components to build decoupled and maintanable applications",
+  "author": "Oriol Torras <oriol@orioltorras.com> (http://orioltorras.com)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/otorras/basics.git"
+  },
+  "bugs": {
+      "url": "http://github.com/otorras/basics/issues"
+  },
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
