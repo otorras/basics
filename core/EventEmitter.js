@@ -33,6 +33,16 @@
     },
 
     off: function(event, listener) {
+      if (!arguments.length) {
+        this._events = null;
+        return this;
+      } else if (arguments.length === 1) {
+        if (this._events.hasOwnProperty(event)) {
+          this._events[event] = null;
+        }
+        return this;
+      }
+
       var listeners     = this.listeners(event),
         listenerIndex = indexOf(listeners, listener);
 

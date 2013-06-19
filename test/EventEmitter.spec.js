@@ -1,60 +1,72 @@
-describe('EventEmitter', function() {
-  var ee, evt = 'evt';
+describe('An EventEmitter:', function() {
+  var emitter, aEvent = 'a event', anotherEvent = 'another event';
 
   beforeEach(function() {
-    ee = new EventEmitter;
+    emitter = new EventEmitter;
   });
 
   afterEach(function() {
-    ee = null;
+    emitter = null;
   });
 
   it('should has an empty array of listeners for a specific event by default', function(){
-    expect(ee.listeners(evt)).to.have.length(0);
+    expect(emitter.listeners(aEvent)).to.have.length(0);
   });
 
   it('should be able to add a listener attached to an event', function() {
-    ee.on(evt, function() {});
+    emitter.on(aEvent, function() {});
 
-    expect(ee.listeners(evt)).to.have.length(1);
+    expect(emitter.listeners(aEvent)).to.have.length(1);
   });
 
   it("should have #on chainable", function() {
-    expect(ee.on()).to.be(ee);
+    expect(emitter.on()).to.be(emitter);
   });
 
   it("should have #once chainable", function() {
-    expect(ee.once()).to.be(ee);
+    expect(emitter.once()).to.be(emitter);
   });
 
   it("should have #when chainable", function() {
-    expect(ee.when()).to.be(ee);
+    expect(emitter.when()).to.be(emitter);
   });
 
   it("should have #off chainable", function() {
-    expect(ee.off()).to.be(ee);
+    expect(emitter.off()).to.be(emitter);
   });
 
-  describe('when an event is emitted', function () {
-    it('should call the listeners once', function () {
+  describe('when events are emitted', function () {
+    it('should call all the events handlers attached once', function () {
       var spy1 = sinon.spy(), spy2 = sinon.spy();
 
 
-      ee.on(evt, spy1);
-      ee.on(evt, spy2);
+      emitter.on(aEvent, spy1);
+      emitter.on(aEvent, spy2);
 
-      ee.emit(evt);
+      emitter.emit(aEvent);
 
       expect(spy1.calledOnce);
       expect(spy2.calledOnce);
     });
 
+    it('should call the listener attached to different events', function() {
+      var spy = sinon.spy();
+
+      emitter.on(aEvent, spy);
+      emitter.on(anotherEvent, spy);
+
+      emitter.emit(aEvent);
+      emitter.emit(anotherEvent);
+
+      expect(spy.calledTwice);
+    });
+
     it("should call the listeners in order", function() {
       var spy1 = sinon.spy(), spy2 = sinon.spy();
 
-      ee.on(evt, spy1);
-      ee.on(evt, spy2);
-      ee.emit(evt);
+      emitter.on(aEvent, spy1);
+      emitter.on(aEvent, spy2);
+      emitter.emit(aEvent);
 
       expect(spy1.calledBefore(spy2)).to.be(true);
     });
@@ -62,8 +74,8 @@ describe('EventEmitter', function() {
     it("should call the listeners with the exact arguments", function() {
       var spy = sinon.spy(), arg1 = 15, arg2 = [], arg3 = {};
 
-      ee.on(evt, spy);
-      ee.emit(evt, arg1, arg2, arg3);
+      emitter.on(aEvent, spy);
+      emitter.emit(aEvent, arg1, arg2, arg3);
 
       expect(spy.calledWithExactly(arg1, arg2, arg3)).to.be(true);
     });
@@ -73,29 +85,19 @@ describe('EventEmitter', function() {
       var listener = function(value) { this.dummy = value; };
       var arg = true;
 
-      ee.on(evt, listener, bound);
-      ee.emit(evt, arg);
+      emitter.on(aEvent, listener, bound);
+      emitter.emit(aEvent, arg);
 
       expect(bound.dummy).to.be(arg);
-    });
-
-    it("should not call the listener removed", function(){
-      var spy = sinon.spy();
-
-      ee.on(evt, spy);
-      ee.off(evt, spy);
-      ee.emit(evt);
-
-      expect(spy.called).to.be(false);
     });
 
     describe("and once is used to attach listener", function() {
       it("should call the listener once allways", function() {
         var spy = sinon.spy();
 
-        ee.once(evt, spy);
-        ee.emit(evt);
-        ee.emit(evt);
+        emitter.once(aEvent, spy);
+        emitter.emit(aEvent);
+        emitter.emit(aEvent);
 
         expect(spy.calledOnce).to.be(true);
       });
@@ -103,9 +105,9 @@ describe('EventEmitter', function() {
       it("should not call the listener removed", function() {
         var spy = sinon.spy();
 
-        ee.once(evt, spy);
-        ee.off(evt, spy);
-        ee.emit(evt);
+        emitter.once(aEvent, spy);
+        emitter.off(aEvent, spy);
+        emitter.emit(aEvent);
 
         expect(spy.called).to.be(false);
       });
@@ -119,9 +121,9 @@ describe('EventEmitter', function() {
             return true;
         });
 
-        ee.when(evt, spy);
+        emitter.when(aEvent, spy);
         for (var i = 0, len = times * 2; i < len; i++)
-          ee.emit(evt);
+          emitter.emit(aEvent);
 
         expect(spy.callCount).to.equal(times);
       });
@@ -129,9 +131,60 @@ describe('EventEmitter', function() {
       it("should not call the listener removed", function() {
         var spy = sinon.spy();
 
-        ee.when(evt, spy);
-        ee.off(evt, spy);
-        ee.emit(evt);
+        emitter.when(aEvent, spy);
+        emitter.off(aEvent, spy);
+        emitter.emit(aEvent);
+
+        expect(spy.called).to.be(false);
+      });
+    });
+  });
+
+  describe('when off() is called', function() {
+    describe('without any parameters', function() {
+      it('should remove all the listeners of all the events', function() {
+        var spy1 = sinon.spy(), spy2 = sinon.spy();
+
+        emitter.on(aEvent, spy1);
+        emitter.on(anotherEvent, spy1);
+        emitter.on(anotherEvent, spy2);
+
+        emitter.off();
+
+        emitter.emit(aEvent);
+        emitter.emit(anotherEvent);
+
+        expect(emitter.listeners(aEvent)).to.have.length(0);
+        expect(emitter.listeners(anotherEvent)).to.have.length(0);
+        expect(spy1.called).to.be(false);
+        expect(spy2.called).to.be(false);
+      });
+    });
+
+    describe('with the event parameter only', function() {
+      it('should remove all the listeners of that event', function() {
+        var spy1 = sinon.spy(), spy2 = sinon.spy();
+
+        emitter.on(aEvent, spy1);
+        emitter.on(aEvent, spy2);
+
+        emitter.off(aEvent);
+
+        emitter.emit(aEvent);
+
+        expect(emitter.listeners(aEvent)).to.have.length(0);
+        expect(spy1.called).to.be(false);
+        expect(spy2.called).to.be(false);
+      });
+    });
+
+    describe('with the event and listener paramater', function() {
+      it("should that specific listener from the event", function(){
+        var spy = sinon.spy();
+
+        emitter.on(aEvent, spy);
+        emitter.off(aEvent, spy);
+        emitter.emit(aEvent);
 
         expect(spy.called).to.be(false);
       });
