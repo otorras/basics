@@ -19,6 +19,25 @@
     return typeof thing !== 'undefined';
   }
 
+  function emit(event) {
+    var listeners = this.listeners(event).slice(),
+      singleArg = arguments.length === 1,
+      slice     = Array.prototype.slice,
+      idx       = 0,
+      len       = listeners.length;
+
+    for ( ; idx < len; idx++) {
+      if (singleArg) {
+        if (defined(listeners[idx][1]))
+          listeners[idx][0].call(listeners[idx][1]);
+        else
+          listeners[idx][0]();
+      } else {
+        listeners[idx][0].apply(listeners[idx][1], slice.call(arguments, 1));
+      }
+    }
+  }
+
   function EventEmitter() {}
 
   EventEmitter.prototype = {
@@ -53,24 +72,8 @@
       return this;
     },
 
-    emit: function(event/*, args*/) {
-      var listeners = this.listeners(event).slice(),
-        singleArg = arguments.length === 1,
-        slice     = Array.prototype.slice,
-        idx       = 0,
-        len       = listeners.length;
-
-      for ( ; idx < len; idx++) {
-        if (singleArg) {
-          if (defined(listeners[idx][1]))
-            listeners[idx][0].call(listeners[idx][1]);
-          else
-            listeners[idx][0]();
-        } else {
-          listeners[idx][0].apply(listeners[idx][1], slice.call(arguments, 1));
-        }
-      }
-    },
+    emit: emit,
+    trigger: emit,
 
     once: function(event, listener, thisp){
       var self = this;
@@ -107,7 +110,7 @@
   };
 
   EventEmitter.mixin = function(target) {
-    var props = ['on', 'off', 'emit', 'once', 'when', 'listeners'];
+    var props = ['on', 'off', 'emit', 'trigger', 'once', 'when', 'listeners'];
 
     for (var i = props.length; i--; )
       target[props[i]] = EventEmitter.prototype[props[i]];

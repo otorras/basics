@@ -44,10 +44,19 @@
       expect(emitter.off()).to.be(emitter);
     });
 
+    it("should have #trigger as an alias of #emit", function() {
+      var spy = sinon.spy();
+
+      emitter.on(aEvent, spy);
+      emitter.emit(aEvent);
+      emitter.trigger(aEvent);
+
+      expect(spy.calledTwice).to.be(true);
+    });
+
     describe('when events are emitted', function () {
       it('should call all the events handlers attached once', function () {
         var spy1 = sinon.spy(), spy2 = sinon.spy();
-
 
         emitter.on(aEvent, spy1);
         emitter.on(aEvent, spy2);
