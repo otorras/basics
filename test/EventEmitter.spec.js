@@ -197,7 +197,7 @@
       });
 
       describe('with the event and listener parameter', function() {
-        it("should that specific listener from the event", function(){
+        it("should remove that specific listener from the event", function(){
           var spy = sinon.spy();
 
           emitter.on(aEvent, spy);
